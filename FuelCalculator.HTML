@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Fuel Calculator — Azur Air</title>
+
+  <!-- === ИКОНКА ПРИЛОЖЕНИЯ (FUEL CALCULATOR) === -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a2a43'/%3E%3Crect x='0' y='0' width='100' height='14' fill='%23c8102e'/%3E%3Ctext x='50' y='52' font-family='Arial, sans-serif' font-size='20' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='1'%3EFUEL%3C/text%3E%3Ctext x='50' y='76' font-family='Arial, sans-serif' font-size='15' font-weight='600' fill='%2393c5fd' text-anchor='middle' letter-spacing='0.5'%3ECALCULATOR%3C/text%3E%3C/svg%3E">
+  
+  <!-- Иконка для iOS -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a2a43'/%3E%3Crect x='0' y='0' width='100' height='14' fill='%23c8102e'/%3E%3Ctext x='50' y='52' font-family='Arial, sans-serif' font-size='20' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='1'%3EFUEL%3C/text%3E%3Ctext x='50' y='76' font-family='Arial, sans-serif' font-size='15' font-weight='600' fill='%2393c5fd' text-anchor='middle' letter-spacing='0.5'%3ECALCULATOR%3C/text%3E%3C/svg%3E">
+  
+  <!-- Манифест для установки как приложение -->
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Fuel%20Calculator%22%2C%22short_name%22%3A%22Fuel%20Calc%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D%2527http%253A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527%2520viewBox%253D%25270%25200%2520100%2520100%2527%253E%253Crect%2520width%253D%2527100%2527%2520height%253D%2527100%2527%2520rx%253D%252722%2527%2520fill%253D%2527%25230a2a43%2527%2F%253E%253Crect%2520x%253D%25270%2527%2520y%253D%25270%2527%2520width%253D%2527100%2527%2520height%253D%252714%2527%2520fill%253D%2527%2523c8102e%2527%2F%253E%253Ctext%2520x%253D%252750%2527%2520y%253D%252752%2527%2520font-family%253D%2527Arial%252C%2520sans-serif%2527%2520font-size%253D%252720%2527%2520font-weight%253D%2527900%2527%2520fill%253D%2527%2523ffffff%2527%2520text-anchor%253D%2527middle%2527%2520letter-spacing%253D%25271%2527%253EFUEL%253C%2Ftext%253E%253Ctext%2520x%253D%252750%2527%2520y%253D%252776%2527%2520font-family%253D%2527Arial%252C%2520sans-serif%2527%2520font-size%253D%252715%2527%2520font-weight%253D%2527600%2527%2520fill%253D%2527%252393c5fd%2527%2520text-anchor%253D%2527middle%2527%2520letter-spacing%253D%25270.5%2527%253ECALCULATOR%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22100x100%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: #0f172a;
+      color: #f8fafc;
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: env(safe-area-inset-top) 0 calc(env(safe-area-inset-bottom) + 12px);
+    }
+    .app {
+      width: 100%;
+      max-width: 480px;
+      padding: 20px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* === Шапка === */
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 0 0 8px;
+    }
+    .title-badge {
+      position: relative;
+      width: 100%;
+      padding: 16px 20px 14px;
+      background: linear-gradient(135deg, #0a2a43 0%, #0f3a5f 100%);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 6px 20px -6px rgba(10, 42, 67, 0.8);
+    }
+    .title-badge::before {
+      content: '';
+      position: absolute;
+      right: -20px;
+      bottom: -30px;
+      width: 120px;
+      height: 120px;
+      background: #c8102e;
+      border-radius: 50%;
+      opacity: 0.18;
+      transform: rotate(-15deg);
+    }
+    .title-badge::after {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: -30px;
+      width: 100px;
+      height: 100px;
+      background: #3b82f6;
+      border-radius: 50%;
+      opacity: 0.12;
+    }
+    .title-main {
+      position: relative;
+      z-index: 1;
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: #ffffff;
+      text-transform: uppercase;
+      line-height: 1.1;
+      text-align: center;
+    }
+    .title-main .accent {
+      color: #c8102e;
+      position: relative;
+      display: inline-block;
+    }
+    .title-main .accent::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 3px;
+      background: #c8102e;
+      border-radius: 2px;
+      transform: skewX(-20deg);
+    }
+    .title-sub {
+      position: relative;
+      z-index: 1;
+      margin-top: 6px;
+      font-size: 0.62rem;
+      letter-spacing: 4px;
+      color: #93c5fd;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .credit {
+      font-size: 0.65rem;
+      color: #475569;
+      letter-spacing: 0.6px;
+      text-align: center;
+    }
+
+    /* === Поля ввода === */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      padding-left: 2px;
+      transition: color 0.2s;
+    }
+    .field input {
+      width: 100%;
+      padding: 16px 18px;
+      background: #1e293b;
+      border: 1.5px solid #334155;
+      border-radius: 16px;
+      color: #f8fafc;
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-align: right;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.2s, color 0.2s;
+      font-variant-numeric: tabular-nums;
+    }
+    .field input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+    }
+    .field input:read-only {
+      color: #93c5fd;
+      border-color: #1e40af;
+      background: #172033;
+    }
+    .field input[type=number]::-webkit-outer-spin-button,
+    .field input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .field input[type=number] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    /* === Базовое зелёное оформление readonly-полей === */
+    .field.field-green label {
+      color: #86efac;
+    }
+    .field.field-green input {
+      border-color: #22c55e;
+      background: #14281d;
+      color: #86efac;
+      cursor: default;
+    }
+    .field.field-green input:focus {
+      border-color: #22c55e;
+      box-shadow: none;
+    }
+
+    /* === СИНЯЯ подсветка по контуру === */
+    .field.field-blue-active label {
+      color: #bfdbfe;
+    }
+    .field.field-blue-active input,
+    .field.field-blue-active input:read-only {
+      background: #0f2946;
+      border-color: #2563eb;
+      color: #bfdbfe;
+      box-shadow: 0 0 0 1.5px #3b82f6, 0 4px 12px -4px rgba(59, 130, 246, 0.3);
+    }
+    .field.field-blue-active input:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 1.5px #60a5fa, 0 0 0 5px rgba(59, 130, 246, 0.2);
+    }
+
+    /* === ЗЕЛЁНАЯ подсветка для MAINT FUEL USED === */
+    .field.field-green-active label {
+      color: #bbf7d0;
+    }
+    .field.field-green-active input {
+      background: #0a3d1f;
+      border-color: #16a34a;
+      color: #bbf7d0;
+      cursor: default;
+      box-shadow: 0 0 0 1.5px #22c55e, 0 4px 12px -4px rgba(34, 197, 94, 0.3);
+    }
+    .field.field-green-active input:focus {
+      border-color: #4ade80;
+      box-shadow: 0 0 0 1.5px #4ade80, 0 0 0 5px rgba(34, 197, 94, 0.2);
+    }
+
+    .divider {
+      margin: 8px 0 4px;
+      height: 1px;
+      background: #334155;
+      border: none;
+    }
+
+    /* === Кнопка сброса === */
+    .reset-btn {
+      margin-top: 8px;
+      width: 100%;
+      padding: 16px 18px;
+      background: transparent;
+      border: 1.5px solid #475569;
+      border-radius: 16px;
+      color: #cbd5e1;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.05s;
+    }
+    .reset-btn:active {
+      background: #1e293b;
+      border-color: #64748b;
+      color: #f8fafc;
+      transform: scale(0.98);
+    }
+
+    @media (max-height: 600px) and (orientation: landscape) {
+      .app { padding-top: 8px; gap: 8px; max-width: 720px; }
+      .header { flex-direction: row; justify-content: space-between; padding: 0; gap: 12px; }
+      .title-badge { padding: 10px 16px; }
+      .title-main { font-size: 1.1rem; }
+      .field input { padding: 10px 14px; font-size: 1rem; }
+      .reset-btn { padding: 10px 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="title-badge">
+        <div class="title-main">
+          FUEL <span class="accent">CALCULATOR</span>
+        </div>
+        <div class="title-sub">AZUR AIR</div>
+      </div>
+      <div class="credit">by Denis Gorelskii</div>
+    </div>
+
+    <div class="field">
+      <label for="remainingFuel">REMAINING FUEL (Kg)</label>
+      <input type="number" id="remainingFuel" step="1" min="0" inputmode="decimal" placeholder="">
+    </div>
+
+    <div class="field field-green" id="fieldFuelUsed">
+      <label for="fuelUsed">MAINT FUEL USED (Kg)</label>
+      <input type="text" id="fuelUsed" readonly placeholder="" inputmode="none" tabindex="-1">
+    </div>
+
+    <div class="field field-green" id="fieldBefore">
+      <label for="before">BEFORE UPLIFT (kg)</label>
+      <input type="text" id="before" readonly placeholder="" inputmode="none" tabindex="-1">
+    </div>
+
+    <div class="field" id="fieldAddedLt">
+      <label for="addedLt">ADDED (Lt)</label>
+      <input type="number" id="addedLt" step="0.1" min="0" inputmode="decimal" placeholder="">
+    </div>
+
+    <div class="field" id="fieldDensity">
+      <label for="density">DENSITY</label>
+      <input type="text" id="density" inputmode="decimal" placeholder="" autocomplete="off">
+    </div>
+
+    <div class="field" id="fieldAddedKg">
+      <label for="addedKg">ADDED (Kg)</label>
+      <input type="text" id="addedKg" readonly placeholder="" inputmode="none" tabindex="-1">
+    </div>
+
+    <div class="field" id="fieldIndicated">
+      <label for="indicatedTotal">INDICATED TOTAL (Kg)</label>
+      <input type="number" id="indicatedTotal" step="1" min="0" inputmode="decimal" placeholder="">
+    </div>
+
+    <hr class="divider">
+
+    <button type="button" class="reset-btn" id="resetBtn">Сброс</button>
+  </div>
+
+  <script>
+    (function() {
+      const remainingFuelInput  = document.getElementById('remainingFuel');
+      const beforeInput         = document.getElementById('before');
+      const addedLtInput        = document.getElementById('addedLt');
+      const densityInput        = document.getElementById('density');
+      const addedKgInput        = document.getElementById('addedKg');
+      const indicatedTotalInput = document.getElementById('indicatedTotal');
+      const fuelUsedInput       = document.getElementById('fuelUsed');
+      const resetBtn            = document.getElementById('resetBtn');
+
+      const fieldFuelUsed  = document.getElementById('fieldFuelUsed');
+      const fieldBefore    = document.getElementById('fieldBefore');
+      const fieldAddedLt   = document.getElementById('fieldAddedLt');
+      const fieldDensity   = document.getElementById('fieldDensity');
+      const fieldAddedKg   = document.getElementById('fieldAddedKg');
+      const fieldIndicated = document.getElementById('fieldIndicated');
+
+      function num(el) {
+        const v = parseFloat(el.value);
+        return isNaN(v) || !isFinite(v) ? 0 : v;
+      }
+
+      function rnd(value) {
+        const n = parseFloat(value);
+        if (isNaN(n) || !isFinite(n)) return 0;
+        return Math.round(n);
+      }
+
+      function isFilled(el) {
+        const s = el.value.trim();
+        return s !== '' && !isNaN(parseFloat(s));
+      }
+
+      function normalizeDensity(raw) {
+        let s = raw.replace(',', '.');
+        s = s.replace(/[^0-9.]/g, '');
+        if (s.startsWith('.')) s = '0' + s;
+        const firstDot = s.indexOf('.');
+        if (firstDot !== -1) {
+          s = s.slice(0, firstDot + 1) + s.slice(firstDot + 1).replace(/\./g, '');
+        }
+        return s;
+      }
+
+      densityInput.addEventListener('input', () => {
+        const raw = densityInput.value;
+        const normalized = normalizeDensity(raw);
+        if (normalized !== raw) densityInput.value = normalized;
+        calculate();
+      });
+
+      function clearHighlights() {
+        fieldFuelUsed.classList.remove('field-green-active');
+        fieldBefore.classList.remove('field-blue-active');
+        fieldAddedLt.classList.remove('field-blue-active');
+        fieldDensity.classList.remove('field-blue-active');
+        fieldAddedKg.classList.remove('field-blue-active');
+        fieldIndicated.classList.remove('field-blue-active');
+      }
+
+      function calculate() {
+        const addedLt   = num(addedLtInput);
+        const density   = num(densityInput);
+        const indicated = num(indicatedTotalInput);
+        const remaining = num(remainingFuelInput);
+
+        const addedKg  = addedLt * density;
+
+        const allFilled =
+          isFilled(remainingFuelInput) &&
+          isFilled(addedLtInput) &&
+          isFilled(densityInput) &&
+          isFilled(indicatedTotalInput);
+
+        addedKgInput.value = addedLt === 0 || density === 0 ? '' : String(rnd(addedKg));
+
+        clearHighlights();
+
+        if (!allFilled) {
+          fuelUsedInput.value = '';
+          beforeInput.value = '';
+          return;
+        }
+
+        const fuelUsed = Math.abs(rnd(indicated - (addedKg + remaining)));
+        const before   = rnd(remaining - fuelUsed);
+
+        fuelUsedInput.value = String(fuelUsed);
+        beforeInput.value   = String(before);
+
+        fieldFuelUsed.classList.add('field-green-active');
+        fieldBefore.classList.add('field-blue-active');
+        fieldAddedLt.classList.add('field-blue-active');
+        fieldDensity.classList.add('field-blue-active');
+        fieldAddedKg.classList.add('field-blue-active');
+        fieldIndicated.classList.add('field-blue-active');
+      }
+
+      function resetAll() {
+        [remainingFuelInput, addedLtInput, densityInput, indicatedTotalInput].forEach(el => {
+          el.value = '';
+        });
+        fuelUsedInput.value = '';
+        beforeInput.value = '';
+        addedKgInput.value = '';
+
+        clearHighlights();
+
+        remainingFuelInput.focus();
+      }
+
+      [remainingFuelInput, addedLtInput, indicatedTotalInput].forEach(input => {
+        input.addEventListener('input', calculate);
+        input.addEventListener('change', calculate);
+      });
+
+      resetBtn.addEventListener('click', resetAll);
+
+      calculate();
+    })();
+  </script>
+</body>
+</html>
